@@ -318,8 +318,7 @@ void checkGlError(const char *file, int line)
     char *pError;
     switch (error) {
       case GL_NO_ERROR:
-        pError = (char *)"GL_NO_ERROR";
-        break;
+        return;
       case GL_INVALID_ENUM:
         pError = (char *)"GL_INVALID_ENUM";
         break;
@@ -342,7 +341,6 @@ void checkGlError(const char *file, int line)
     }
 
     ALOGE("glError (%s) %s:%d\n", pError, file, line);
-    return;
   }
   return;
 }
@@ -351,17 +349,11 @@ void checkGlError(const char *file, int line)
 void checkEglError(const char *file, int line)
 //-----------------------------------------------------------------------------
 {
-  for (int i = 0; i < 5; i++) {
-    const EGLint error = eglGetError();
-    if (error == EGL_SUCCESS) {
-      break;
-    }
-
+  for (EGLint error = eglGetError(); error; error = eglGetError()) {
     char *pError;
     switch (error) {
       case EGL_SUCCESS:
-        pError = (char *)"EGL_SUCCESS";
-        break;
+        return;
       case EGL_NOT_INITIALIZED:
         pError = (char *)"EGL_NOT_INITIALIZED";
         break;
@@ -409,7 +401,6 @@ void checkEglError(const char *file, int line)
         return;
     }
     ALOGE("eglError (%s) %s:%d\n", pError, file, line);
-    return;
   }
   return;
 }
